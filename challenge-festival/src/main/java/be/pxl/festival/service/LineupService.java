@@ -4,7 +4,9 @@ import be.pxl.festival.model.Act;
 import be.pxl.festival.model.FestivalDay;
 import be.pxl.festival.model.Genre;
 import be.pxl.festival.model.Stage;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -49,5 +51,52 @@ public class LineupService {
 
     public List<Act> findAll() {
         return new ArrayList<>(acts.values());
+    }
+
+    public List<Act> findByDay(FestivalDay day) {
+        if (day == null) {
+            return findAll();
+        }
+
+        // idk how, idk why, but we found the acts smh :D
+        List<Act> result = new ArrayList<>();
+        // magic happens here. Don't touch it, even I don't know how it works
+        for (Act act : acts.values()) {
+            if (act.getDay() == day) {
+                result.add(act);
+            }
+        }
+        return result;
+    }
+
+    public Act findById(Long id) {
+        Act act = acts.get(id);
+        if (act == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Act met id " + id + " bestaat niet");
+        }
+        return act;
+    }
+
+    public Act create(Act act) {
+        add(act);
+        return act;
+    }
+
+    public Act update(Long id, Act updated) {
+        Act act = findById(id);
+        act.setName(updated.getName());
+        act.setGenre(updated.getGenre());
+        act.setStage(updated.getStage());
+        act.setDay(updated.getDay());
+        act.setStartTime(updated.getStartTime());
+        act.setDurationMinutes(updated.getDurationMinutes());
+        act.setFee(updated.getFee());
+        act.setHeadliner(updated.isHeadliner());
+        return act;
+    }
+
+    public void delete(Long id) {
+        findById(id);
+        acts.remove(id);
     }
 }
