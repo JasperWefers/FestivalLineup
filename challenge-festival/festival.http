@@ -1,0 +1,85 @@
+### Alle acts
+GET http://localhost:8080/api/acts
+
+### Niveau 1 — acts van één dag
+GET http://localhost:8080/api/acts?day=SATURDAY
+
+### Niveau 1 — één act
+GET http://localhost:8080/api/acts/4
+
+### Niveau 1 — nieuwe act (verwacht 201)
+POST http://localhost:8080/api/acts
+Content-Type: application/json
+
+{
+  "name": "De Nachtegalen",
+  "genre": "INDIE",
+  "stage": "CLUB",
+  "day": "FRIDAY",
+  "startTime": "17:00",
+  "durationMinutes": 45,
+  "fee": 2500,
+  "headliner": false
+}
+
+### Niveau 1 — act aanpassen
+PUT http://localhost:8080/api/acts/3
+Content-Type: application/json
+
+{
+  "name": "Kraak",
+  "genre": "ROCK",
+  "stage": "MARQUEE",
+  "day": "FRIDAY",
+  "startTime": "20:15",
+  "durationMinutes": 60,
+  "fee": 3500,
+  "headliner": false
+}
+
+### Niveau 1 — act verwijderen (verwacht 204)
+DELETE http://localhost:8080/api/acts/18
+
+### Niveau 2 — onbestaand id (verwacht 404)
+GET http://localhost:8080/api/acts/999
+
+### Niveau 2 — ongeldige act (verwacht 400)
+POST http://localhost:8080/api/acts
+Content-Type: application/json
+
+{
+  "name": "",
+  "genre": "POP",
+  "durationMinutes": 5,
+  "fee": -10
+}
+
+### Niveau 2 — uitdaging: tweede headliner op vrijdag MAIN (verwacht 409)
+POST http://localhost:8080/api/acts
+Content-Type: application/json
+
+{
+  "name": "Nog een headliner",
+  "genre": "ROCK",
+  "stage": "MAIN",
+  "day": "FRIDAY",
+  "startTime": "23:30",
+  "durationMinutes": 60,
+  "fee": 30000,
+  "headliner": true
+}
+
+### Niveau 3 — zoeken met gecombineerde filters
+GET http://localhost:8080/api/acts/search?day=SATURDAY&after=20:00
+
+### Niveau 3 — zoeken: rock-headliners
+GET http://localhost:8080/api/acts/search?genre=ROCK&headliner=true
+
+### Niveau 3 — affiche
+GET http://localhost:8080/api/acts/poster?day=FRIDAY
+
+### Niveau 3 — vertraging
+POST http://localhost:8080/api/acts/delay?day=FRIDAY&stage=MAIN&minutes=30
+
+### Niveau 3 — statistieken
+GET http://localhost:8080/api/acts/stats
