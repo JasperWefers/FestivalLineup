@@ -3,6 +3,7 @@ package be.pxl.festival.controller;
 import be.pxl.festival.model.Act;
 import be.pxl.festival.model.FestivalDay;
 import be.pxl.festival.service.LineupService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,12 +40,12 @@ public class LineupController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Act create(@RequestBody Act act) {
+    public Act create(@Valid @RequestBody Act act) {
         return lineupService.create(act);
     }
 
     @PutMapping("/{id}")
-    public Act update(@PathVariable Long id, @RequestBody Act act) {
+    public Act update(@PathVariable Long id, @Valid @RequestBody Act act) {
         return lineupService.update(id, act);
     }
 

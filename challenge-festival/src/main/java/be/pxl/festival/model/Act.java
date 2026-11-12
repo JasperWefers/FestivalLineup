@@ -1,5 +1,11 @@
 package be.pxl.festival.model;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import java.time.LocalTime;
 
 /**
@@ -8,12 +14,20 @@ import java.time.LocalTime;
 public class Act {
 
     private Long id;
+    @NotBlank
     private String name;
+    @NotNull
     private Genre genre;
+    @NotNull
     private Stage stage;
+    @NotNull
     private FestivalDay day;
+    @NotNull
     private LocalTime startTime;
+    @Min(15)
+    @Max(180)
     private int durationMinutes;
+    @PositiveOrZero
     private double fee;          // gage in euro
     private boolean headliner;
 

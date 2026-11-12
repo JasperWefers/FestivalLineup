@@ -4,9 +4,9 @@ import be.pxl.festival.model.Act;
 import be.pxl.festival.model.FestivalDay;
 import be.pxl.festival.model.Genre;
 import be.pxl.festival.model.Stage;
-import org.springframework.http.HttpStatus;
+import be.pxl.festival.exception.ActNotFoundException;
+import be.pxl.festival.exception.HeadlinerConflictException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -72,12 +72,18 @@ public class LineupService {
     public Act findById(Long id) {
         Act act = acts.get(id);
         if (act == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Act met id " + id + " bestaat niet");
+            throw new ActNotFoundException(id);
         }
         return act;
     }
 
     public Act create(Act act) {
+        for (Act other : acts.values()) {
+            // hurts my head, but whatever, it works
+            if (act.isHeadliner() && other.isHeadliner() && other.getDay() == act.getDay() && other.getStage() == act.getStage()) {
+                throw new HeadlinerConflictException("Er is al een headliner op die dag en dat podium");
+            }
+        }
         add(act);
         return act;
     }
